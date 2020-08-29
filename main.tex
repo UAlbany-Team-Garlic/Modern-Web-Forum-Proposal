@@ -3,6 +3,8 @@
 \usepackage{wrapfig}
 \usepackage{caption}
 \usepackage{dirtree}
+\usepackage{textpos}
+
 
 \usepackage{hyperref}
 \hypersetup{colorlinks=true}
@@ -24,11 +26,11 @@
 
 \maketitle
 \thispagestyle{fancy}
+
 \section{Introduction}
 \subsection{Background Knowledge}
 
 \begin{wraptable}{r}{5.5cm}
-
 \begin{tabular}{|l|l|}
 
 \hline
@@ -53,30 +55,35 @@ vBulletin & PHP \\
 \hline
 \end{tabular}
 \captionsetup{belowskip=0pt}
-\caption{A list of top forum softwares and their back end languages. Note the dominance of PHP}
+\caption{A list of top forum software and their back end languages. Note the dominance of PHP}
 \end{wraptable}
 \subsubsection{History}
 \paragraph{}
 Internet forums dominated the web as the primary method of online communication before the age of social media. Today, major social media platforms such as \href{https://www.reddit.com/}{reddit}, \href{https://www.4channel.org/}{4chan}, and others still use the forum model as the basis for interaction on their sites. Beyond these juggernauts, forums are still one of the most popular platforms for the online discussion of niche subjects and can be hosted by anyone with a passion and a web server. 
 \paragraph{}
-Forum software is the collection of client and server applications that handle the running and data flow of a forum. As the golden age of forums overlapped with the golden age of PHP and the LAMP stack, it should be no surprise that PHP dominates the landscape of internet forum software. 
+Forum software is the collection of client and server applications that handle the running and data flow of a forum. The golden age of forums coincided with the height of popularity of PHP and the LAMP stack. Therefore it should be no surprise that PHP dominates the landscape of internet forum software. 
 \subsubsection{The Modern Ecosystem}
 \paragraph{}
 Unfortunately most of these PHP forum applications, while still well maintained, lack the ability to keep up in today's modern web software ecosystems. 
+\begin{textblock}{5}(5, -7)
+For a table of contents, \hyperref[cont]{Click Here}.
+\end{textblock}
+
 \paragraph{}
-Modern web software is built in a much more modularized way and makes use of design patterns like MVC to handle  all interface processing client side using technologies like React and Angular. The aforementioned legacy form software instead uses PHP to preform rendering (hypertext pre-processing) of the page server side which is costly and inefficient. On top of this, web developers just aren't as interested in PHP as a language anymore and are moving in the direction of newer server side technology like Node.js and Express to replace PHP back ends and MangoDB to replace SQL. 
+Modern web software is built in a more modular manner. This software makes use of design patterns like MVC to handle all interface processing client side using technologies like React and Angular. The aforementioned legacy form software instead used PHP to preform rendering (hypertext pre-processing) of the page server side, which was costly and inefficient. In addition web developers just aren't as interested in PHP as a language anymore. Developers are moving to newer server side technology like Node.js and Express to replace PHP back ends, and MongoDB to replace SQL. 
 
 \subsection{Project Significance}
-The goal of this project is to develop a Internet Forum Software package using a modern stack that can act as a lightweight replacement to legacy PHP forum software written for the LAMP stack. A modern forum project like this has wide reaching applications for website customers looking to host forums on their sites. Many customers desire a form but quickly learn that all the best forums are PHP based, this can corner customers and force them into using older PHP software, which isn't as friendly to cloud computing and other accelerating technologies that are geared towards modern stacks. By developing this software, you have the opportunity to provide customers a drop in replacement for legacy systems, as well as a fresh and exciting new paradigm for their website that will bring time tested forum technology into the modern era. 
+\paragraph{}
+The goal of this project is to develop an Internet Forum Software package using a modern stack that can act as a lightweight replacement to the legacy PHP forum software written for the LAMP stack. A modern forum project has wide reaching applications for website customers looking to host forums on their sites. Many customers desire a forum but quickly learn that all the best forums are PHP based. This can force customers to use older PHP software, which isn't as friendly to cloud computing and other accelerating technologies that are geared towards modern stacks. By developing this software, you will provide customers a drop in replacement for legacy systems, and a new paradigm for their website that will bring time tested forum technology into the modern era. 
 
-\section{Requirements}
+\section{Structure and Function Background}
+\paragraph{}
+Before getting into requirements it is essential that one understands the structures and functions of internet forums. Please note, while these are not the requirements, your forum must conform to these basic archetypes, as the requirements proceed assuming these are a given. 
 
-\subsection{Broad Overview}
-Your task is to create a highly customizable forum software with a modern stack that provides both forum administrators and users a fine degree of control over the style and features. 
-
-\subsection{General Structure Overview}
+\subsection{General Site Structure Overview}
 \begin{minipage}{0.65\textwidth}
-All forums follow a basic structural pattern of a four level hierarchy (Referred form here on out as 4LH): \\ Home $\to$ Topic $\to$ Thread $\to$ Post. This compartmentalizes forums by breaking them into different sections each with higher specificity of discussion then the last. \ref{home} - \ref{post} provide a broad overview of the purposes of each of these sections.
+\paragraph{}
+All forums follow a basic structural pattern of a four level hierarchy (Referred form here on out as 4LH): Home $\to$ Topic $\to$ Thread $\to$ Post. This compartmentalizes forums by breaking them into different sections each with higher specificity of discussion than the last. \ref{home} - \ref{post} provide a broad overview of the purposes of each of these sections.
 \end{minipage}%
 \hspace{0.5cm}
 \vline
@@ -94,9 +101,9 @@ The 4 level hierarchy (4LH) pattern all forums follow.
 
 \newpage
 
-\subsubsection{Examples}
+\subsubsection{Examples}\label{StructEx}
 \paragraph{}
-Throughout the explanation of the structure we will be referring to three different popular forums (reddit, 4chan, MAL) as examples of different design decisions regarding the sections in the 4LH pattern. Each of these forums uses a 4LH but refers to its sections as different things and stylizes them in different ways. To help you better understand the sections, We have provided a side by side comparison with hyperlinks to a sample of each section, as well as what each forum refers to the section by. Please note that that each section is directly equivalent to the it's level on the 4LH ladder! Some forums user terminology for one section that is the same that another form uses for a different section, For example, MAL refers to it's threads as topics and reddit refers to it's threads as posts.
+Throughout the explanation of the structure we will refer to three different popular forums (reddit, 4chan, MAL) as examples of different design decisions regarding the sections of the 4LH pattern. Each of these forums uses a 4LH, but they refer to its sections as different things and stylize them in different ways. To illustrate the 4LH sections the trees below provide a side by side comparison with hyperlinks to a sample of each section, and each depict how a forum refers to its sections. Please note that that each section is directly equivalent to the it's level on the 4LH ladder. Some forums' user terminology for one section is the same another forum uses for a different section. For example, MAL refers to it's threads as topics and reddit refers to it's threads as posts.
 \paragraph{}
 
 \begin{minipage}{0.3\textwidth}
@@ -122,7 +129,7 @@ Throughout the explanation of the structure we will be referring to three differ
 .4 Reply. 
 }
 \end{minipage}%
-\footnotetext{Due to the nature of 4chan deleting threads after a few days, I can't provide an active link to a thread or post, but feel free to look at them.}
+\footnotetext{Due to the nature of 4chan deleting threads after a few days, I cannot provide an active link to a thread or post, but feel free to look at them.}
 \vline
 \begin{minipage}{0.3\textwidth}
 \hspace{0.3cm}
@@ -135,41 +142,127 @@ Throughout the explanation of the structure we will be referring to three differ
 .4 \href{}{Post}. 
 }
 \end{minipage}%
-\footnotetext{Cant link directly to posts on MAL}
+\footnotetext{Cannot link directly to posts on MAL}
 
 \subsubsection{Home}\label{home}
 \paragraph{}
-The Home (AKA: Homepage) is the landing page for the forum as well as the primary navigation page for users to pick a topic they're interested in discussing. It will always contain the name of the forum as well as any branding the forum has (logos and motos etc). It will sometimes highlight popular threads from all topics.
-
-
+The Home (AKA: Homepage) is the landing page for the forum as well as the primary navigation page for users to pick a topic they are interested in discussing. It contains the name of the forum as well as any branding the forum has (logos and motto's etc). It can highlight popular threads from all topics.
 
 \paragraph{}
-For some examples, reddit is a forum who's home features top threads, but doesn't feature navigation to topics at all due to the millions of user created reddit communities. Other forums like 4chan and MAL only allows topics to be created by admins, so there is a set navigation layout on the homepage. When you explore these examples you will also notice that topics are grouped often grouped on the homepage into categories. 
+For example; reddit is a forum who's home features top threads, but doesn't have navigation to topics due to the millions of user created reddit communities. Other forums like 4chan and MAL only allow topics to be created by admins, so there is a set navigation layout on the homepage. On these homepages topics are often grouped on into categories. 
 
 \subsubsection{Topic}
+\paragraph{}
 Topics (AKA: boards or communities) are containers for threads. A topic contains threads that are all about similar content (I.E. a forum about animals might have a dog topic, containing threads related to dogs). A topic will have its own page in which threads in that topic will be displayed, and the option to create new threads exists. How much about each thread is displayed varies by platform.
-
-For example, reddit will display all threads ever posted, but only display the title and image, allowing users to vote on threads using the topic page. 4chan takes a different approach; It displays the fifteen most recently replied to threads and puts them on a page, and has 10 pages of threads per topic. It also opts to display the 5 most recent posts in the thread under the thread heading which contains a character capped preview of all the text in the opening thread post. MAL, a more traditional forum, displays the most recently replied to threads but only display the name of the topic, when who it was posted by, and when and who posted the last reply. 
+\paragraph{}
+For example, reddit will display all threads ever posted, but only display the title and image. This allows users to vote on threads using the topic page. 4chan takes a different approach. It displays the fifteen most recently replied to threads and puts them on a page, and has 10 pages of threads per topic. 4chan opts to display the 5 most recent posts in the thread under the thread heading which contains a character capped preview of all the text in the opening thread post. MAL, a more traditional forum, displays the most recently replied to threads, but only display the name of the topic, when and who it was posted by, and when and who posted the last reply. 
 
 \subsubsection{Thread}
-A thread is a container for posts. Threads are the highest level structure that a normal user of a forum can create. A thread is started from a topic's page, the actual content of the message used to create the thread is a post. A thread will have its own page that allows users to reply to the thread and each other.
-
-For example a reddit thread page allows users to see all of the replies and replies to those replies, as well as allowing users to upvote and downvote these replies. 
+\paragraph{}
+A thread is a container for posts. Threads are the highest level structure that a normal user of a forum can create. A thread is started from a topic's page, and a post is the actual content of the message used to create the thread. A thread will have its own page for users to reply to the thread and each other.
+\paragraph{}
+For example, a reddit thread page lets users see all of the replies to a post and the replies to those replies (Please note that you don't need to implement a reddit like reply system). It also allows users to upvote and downvote replies. A 4chan thread has no direct reply system rather, 4chan allows posts to be "mentioned" by its post ID. In turn a MAL thread has a "quote" option under every post that will allow you to reply and allow other users to track your discussion by posting a minimized version of the quote chain above posts.    
 
 \subsubsection{Post}\label{post}
+\paragraph{}
+A post is the smallest unit of discussion on a forum. A post is a message within a thread. A post will always contain text but may also allow an attached image, file, embed, or video. Users can reply to posts by creating their own posts, usually this will be done on the thread page and there will be no such thing as a "Post page" however some forums like reddit allow for an individual post in a thread to be linked too. 
+\paragraph{}
+reddit is an example of a forum that lets you upload multiple pieces of media when making a post but only if your post is the start of a thread. 4chan on the other hand allows only images but will allow one image to  be attached per post. MAL will allow both unlimited images and links in the initial and reply posts.
+
+\subsection{User Structure}
+Any entity that makes threads, posts, manages, or even looks at the forum is a "User". Forum users vary significantly by desired forum model. Users will have "ranks" or "roles" that grant them certain elevated privileges and forum management options, or users may be anonymous and not have any account associated with them at all. 
+
+\begin{minipage}{0.65\textwidth}
+\paragraph{}
+Much like site structure, most forums follow a structural hierarchy for users as well. This pattern is normally something along the lines of Admin $\to$ Moderator $\to$ User $\to$ Guest. This structure is top down, and allows for heightened content quality control by a sites administration.
+\end{minipage}%
+\hspace{0.5cm}
+\vline
+\hspace{0.5cm}
+\begin{minipage}{0.35\textwidth}
+\dirtree{%
+.1 Administrator. 
+.2 Moderator. 
+.3 User. 
+.4 Guest/Anon. 
+}
+\vspace{0.5 cm}
+The forum user hierarchy (FUH)  
+\end{minipage}%
+
+\paragraph{}
+Note that what we will now refer to as a "User" is a user with normal site permissions and not the abstract notion of a user that we have been discussing which by definition encompasses all four of these. It should also be noted that while roles follow the FUH, the true inheritance relationship between admins moderators and users is one of inheritance where Admins and Moderators are users, while guests are not.
+
+\subsubsection{Examples}
+Using the same three sites from \ref{StructEx}, we will analyze their user hierarchy in detail. and compare and contrast them in the following sections.
+
+\vspace{0.2 cm}
+\begin{minipage}{0.4\textwidth}
+\hspace{0.3cm}
+\href{https://www.reddit.com/}{reddit}
+\vspace{0.2 cm}
+\dirtree{%
+.1 Reddit Admin. 
+.2 Community Moderator. 
+.3 User. 
+.4 Lurker. 
+}
+\end{minipage}%
+\vline
+\begin{minipage}{0.23\textwidth}
+\hspace{0.3cm}
+\href{https://www.4channel.org/}{4chan}
+\vspace{0.2 cm}
+\dirtree{%
+.1 Admin. 
+.2 Mod.
+.3 N/A\footnotemark.
+.4 Anon. 
+}
+\end{minipage}%
+\footnotetext{4chan has no accounts for normal users, rather everyone is a "Guest"}
+\vline
+\begin{minipage}{0.4\textwidth}
+\hspace{0.3cm}
+\href{https://myanimelist.net/}{MAL}
+\vspace{0.2 cm}
+\dirtree{%
+.1 Forum Administrator. 
+.2 Forum Moderator. 
+.3 User. 
+.4 Lurker. 
+}
+\end{minipage}%
+
+\subsubsection{Administrators}
+Administrators own the forum and have full access to all features including moderation, promotion, style, topic creation, etc.      
+
+\subsubsection{Moderators}
+
+\subsubsection{Users}
+
+\subsubsection{Guests / Anons}
+
+\subsection{Security}
+\paragraph{}
+So that a forum can be more then just a proof of concept, every good forum needs security features. A wide range
+
+\section{Requirements}
+\paragraph{}
+Your task is to create a customizable forum software with a modern stack that provides forum administrators and users a fine degree of control over the style and features. 
 
 \subsection{Configuration Options}
 Configurations are parameters that are passed into  
 
 \subsubsection{Forum Administrator Setup Options}
-When setting up the forum for the first time, An Administrator should have the option to decide on a variety of features that the forum should have. These options will then go on to determine the layout of the database for storing posts and users. We have identified the following options should be available at creation based off of currently popular forums features.
+When setting up a forum for the first time, an Administrator should have the option to decide on a variety of features that the forum should have. These options will determine the layout of the database for storing posts and users. We have identified the following options that should be available at creation based on popular forum features.
 
 \subsubsection{Voting}
-Enable the ability for users to upvote and downvote posts and threads. A Sub-option to allow downvotes should also be present to allow the disabling of the ability to see downvotes. 
-A good example of forum with upvote and downvote functionality is \href{https://www.reddit.com/}{Reddit}, while a good example of a forum like environment with upvotes and invisible downvotes is the \href{https://www.youtube.com/}{Youtube} comments section. 
+The ability for users to upvote and downvote posts and threads. A Sub-option to downvotes should be present that will hide downvotes from users. 
+A good example of forum with upvote and downvote functionality is \href{https://www.reddit.com/}{Reddit}, and a good example of a forum like environment with upvotes and invisible downvotes is the \href{https://www.youtube.com/}{Youtube} comments section. 
 
 \paragraph{A Note about sub option layout}
-If an boolean option in the option tree is a sub-option of another boolean option, it will set to false if its parent option is false. All boolean options are false by default, all string options are empty. a radio option will be it's first sub-option by default, and you may only select another sub option of that radio.
+If a boolean option is a sub-option of another boolean option, it will be set to false if its parent option is false. All boolean options are false by default, and all string options are initially empty. A radio option will be it's first sub-option by default, and you may only select another sub option of that radio.
 \\
 \dirtree{%
 .1 Setup Options. 
@@ -193,5 +286,9 @@ Back end handles data safely, site uses meets standards for safe authentication 
 
 
 \section{Implementation Recommendations}
+\newpage
+\section{Contents}\label{cont}
+\tableofcontents
 
 \end{document}
+
