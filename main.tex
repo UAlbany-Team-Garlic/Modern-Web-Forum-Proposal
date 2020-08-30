@@ -6,6 +6,12 @@
 \usepackage{textpos}
 
 
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage[english]{babel}
+\usepackage{tikz-uml}
+
+
 \usepackage{hyperref}
 \hypersetup{colorlinks=true}
 
@@ -170,7 +176,7 @@ A post is the smallest unit of discussion on a forum. A post is a message within
 reddit is an example of a forum that lets you upload multiple pieces of media when making a post but only if your post is the start of a thread. 4chan on the other hand allows only images but will allow one image to  be attached per post. MAL will allow both unlimited images and links in the initial and reply posts.
 
 \subsection{User Structure}
-Any entity that makes threads, posts, manages, or even looks at the forum is a "User". Forum users vary significantly by desired forum model. Users will have "ranks" or "roles" that grant them certain elevated privileges and forum management options, or users may be anonymous and not have any account associated with them at all. 
+Any entity that makes threads, posts, manages, or even looks at the forum is a "User". Forum users vary significantly by desired forum model. Users will have "ranks" or "roles" that grant them certain elevated privileges and forum management options, or users may be anonymous guests and not have any account associated with them at all. 
 
 \begin{minipage}{0.65\textwidth}
 \paragraph{}
@@ -191,8 +197,31 @@ The forum user hierarchy (FUH)
 \end{minipage}%
 
 \paragraph{}
-Note that what we will now refer to as a "User" is a user with normal site permissions and not the abstract notion of a user that we have been discussing which by definition encompasses all four of these. It should also be noted that while roles follow the FUH, the true inheritance relationship between admins moderators and users is one of inheritance where Admins and Moderators are users, while guests are not.
+Note that what we will now refer to as a "User" is a user with normal site permissions and not the abstract notion of a user that we have been discussing which by definition encompasses all four of these. It should also be noted that while roles follow the FUH, the true inheritance relationship between admins moderators and users is one of inheritance where admins and moderators are users, while guests are not.
+\\\\\\
+\textbf{UML Model of the FUH:} Associations (small arrows) represent moderation ability, inheritance relations (white tipped arrows) represent Is-A relationships.
+\vspace{0.5 cm}
+\begin{center}
+    \begin{tikzpicture} 
+        \begin{umlpackage}[x=0, y=0]{Abstract User}
+            \begin{umlpackage}[x=0, y=0]{Account User}
+                \umlsimpleclass[x=1,y=-2]{Admin}
+                \umlsimpleclass[x=1, y=0]{User}
+                \umlsimpleclass[x=0,y=-4]{Moderator}
+            \end{umlpackage}
+            \umlsimpleclass[x=4,y=-2]{Guest}
+        \end{umlpackage}
+        %\umlinherit[anchor1=110, anchor2=-110]{Admin}{User}
+        %\umluniassoc[anchor1=70, anchor2=-70]{Admin}{User}
+        \umlinherit[geometry=|-, anchor1=160, anchor2=173]{Moderator}{User}
+        \umluniassoc[geometry=|-, anchor1=150, anchor2=187]{Moderator}{User}
+        \umluniassoc[geometry=-|, anchor1=-10, anchor2=-90]{Moderator}{Guest}
+        \umluniassoc[geometry=--, anchor1=0, anchor2=180]{Admin}{Guest}
+        \umluniassoc[geometry=--, anchor1=0, anchor2=180]{Admin}{Guest}
+    \end{tikzpicture}
+\end{center}
 
+\newpage
 \subsubsection{Examples}
 Using the same three sites from \ref{StructEx}, we will analyze their user hierarchy in detail. and compare and contrast them in the following sections.
 
@@ -205,9 +234,10 @@ Using the same three sites from \ref{StructEx}, we will analyze their user hiera
 .1 Reddit Admin. 
 .2 Community Moderator. 
 .3 User. 
-.4 Lurker. 
+.4 N/A\footnotemark. 
 }
 \end{minipage}%
+\footnotetext{reddit does not allow posts by guests, must have an account.}
 \vline
 \begin{minipage}{0.23\textwidth}
 \hspace{0.3cm}
@@ -230,18 +260,23 @@ Using the same three sites from \ref{StructEx}, we will analyze their user hiera
 .1 Forum Administrator. 
 .2 Forum Moderator. 
 .3 User. 
-.4 Lurker. 
+.4 N/A\footnotemark.
 }
 \end{minipage}%
+\footnotetext{MAL does not allow posts by guests, must have an account.}
 
 \subsubsection{Administrators}
-Administrators own the forum and have full access to all features including moderation, promotion, style, topic creation, etc.      
+Administrators own the forum and have full access to all features including moderation, promotion, style, topic creation, etc. They are the only ones who can moderate moderators and each other. To create a forum, at least one admin account is necessary so that the forum can be managed after its creation. Most forums will display an admin badge or give admins a special name color when an Admin makes a post to let users know to pay extra-close attention to what is being said.    
 
 \subsubsection{Moderators}
+Moderators are generally the policemen of a forum. They have low level moderation work outsourced to them by administrators which is accomplished by patrolling and looking over flagged or reported posts. Moderators may also have elevated permissions to pin threads or create new topics depending on the forums settings.
 
 \subsubsection{Users}
+Users are the normal account holding users of a forum. It is safe to assume that on a regular forum, 99.9\% of abstract users will just be this level of regular user. 
 
 \subsubsection{Guests / Anons}
+Anyone without an account is a "Guest". Guests usually can't post, however, some forums 
+
 
 \subsection{Security}
 \paragraph{}
