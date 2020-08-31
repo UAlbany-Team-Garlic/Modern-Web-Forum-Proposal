@@ -86,7 +86,7 @@ The goal of this project is to develop an Internet Forum Software package using 
 \paragraph{}
 Before getting into requirements it is essential that one understands the structures and functions of internet forums. Please note, while these are not the requirements, your forum must conform to these basic archetypes, as the requirements proceed assuming these are a given. 
 
-\subsection{General Site Structure Overview}
+\subsection{General Site Structure Overview}\label{structOver}
 \begin{minipage}{0.65\textwidth}
 \paragraph{}
 All forums follow a basic structural pattern of a four level hierarchy (Referred form here on out as 4LH): Home $\to$ Topic $\to$ Thread $\to$ Post. This compartmentalizes forums by breaking them into different sections each with higher specificity of discussion than the last. \ref{home} - \ref{post} provide a broad overview of the purposes of each of these sections.
@@ -199,7 +199,7 @@ The forum user hierarchy (FUH)
 \paragraph{}
 Note that what we will now refer to as a "User" is a user with normal site permissions and not the abstract notion of a user that we have been discussing which by definition encompasses all four of these. It should also be noted that while roles follow the FUH, the true inheritance relationship between admins moderators and users is one of inheritance where admins and moderators are users, while guests are not.
 \\\\\\
-\textbf{UML Model of the FUH:} Associations (small arrows) represent moderation ability, inheritance relations (white tipped arrows) represent Is-A relationships.
+\textbf{UML Model of the FUH:} Associations (small arrows) represent ability to moderate, inheritance relations (white tipped arrows) represent Is-A relationships.
 \vspace{0.5 cm}
 \begin{center}
     \begin{tikzpicture} 
@@ -217,7 +217,9 @@ Note that what we will now refer to as a "User" is a user with normal site permi
         \umluniassoc[geometry=|-, anchor1=150, anchor2=187]{Moderator}{User}
         \umluniassoc[geometry=-|, anchor1=-10, anchor2=-90]{Moderator}{Guest}
         \umluniassoc[geometry=--, anchor1=0, anchor2=180]{Admin}{Guest}
-        \umluniassoc[geometry=--, anchor1=0, anchor2=180]{Admin}{Guest}
+        \umluniassoc[geometry=--, anchor1=90, anchor2=-90]{Admin}{User}
+        \umlinherit[geometry=--, anchor1=-147.5, anchor2=40]{Admin}{Moderator}
+        \umluniassoc[geometry=--, anchor1=-137.5, anchor2=30]{Admin}{Moderator}
     \end{tikzpicture}
 \end{center}
 
@@ -250,7 +252,7 @@ Using the same three sites from \ref{StructEx}, we will analyze their user hiera
 .4 Anon. 
 }
 \end{minipage}%
-\footnotetext{4chan has no accounts for normal users, rather everyone is a "Guest"}
+\footnotetext{4chan has no accounts for normal users, rather everyone is a "Guest".\footnotemark[6]}
 \vline
 \begin{minipage}{0.4\textwidth}
 \hspace{0.3cm}
@@ -272,25 +274,108 @@ Administrators own the forum and have full access to all features including mode
 Moderators are generally the policemen of a forum. They have low level moderation work outsourced to them by administrators which is accomplished by patrolling and looking over flagged or reported posts. Moderators may also have elevated permissions to pin threads or create new topics depending on the forums settings.
 
 \subsubsection{Users}
-Users are the normal account holding users of a forum. It is safe to assume that on a regular forum, 99.9\% of abstract users will just be this level of regular user. 
+Users are the normal account holding users of a forum. It is safe to assume that on a regular forum, 99.9\% of abstract users will just be this level of regular user. In order to become a user, a forum will fist have you create an account, and then have you log in to use the forum. 
 
 \subsubsection{Guests / Anons}
-Anyone without an account is a "Guest". Guests usually can't post, however, some forums 
-
+Anyone without an account is a "Guest". Guests usually can't post on normal forums and may not even be allowed to veiw any content. However, some forums like 4chan are almost exclusively used by accounts-less anonymous users, where only mods and admins have accounts.\footnotemark
+\footnotetext{Anyone who really knows 4chan knows that this is a drastic simplification of the account system and that between pass users, tripcode users, and janitors there is more complexity then what could fit into this model.} 
 
 \subsection{Security}
 \paragraph{}
-So that a forum can be more then just a proof of concept, every good forum needs security features. A wide range
+So that a forum can be more then just a proof of concept, every good forum needs security features. A wide range of forum security features exist across many of our example site, however since our security requirements will primarily be API driven using simple hashing, we will leave the examples to be researched independently. 
 
 \section{Requirements}
+\subsection{Goal}
 \paragraph{}
-Your task is to create a customizable forum software with a modern stack that provides forum administrators and users a fine degree of control over the style and features. 
+Your task is to create a highly customizable forum software with a modern stack that provides forum administrators and users a fine degree of control over the style and features. 
 
 \subsection{Configuration Options}
-Configurations are parameters that are passed into  
+\paragraph{}
+A forum isn't highly customizable unless it has options, and quite a few of them at that. These options will allow forum users to customize almost every aspect of the form from layout and style all the way to features and moderation. By integrating a diverse array of options, the functionality of the end product will grow exponentially with the number of people who find this software able to be customized to their needs. Sections \ref{configclass} - \ref{confighier} will elaborate on the complexities and structures of configurations which will be used extensively throughout the rest of the requirements. 
 
-\subsubsection{Forum Administrator Setup Options}
-When setting up a forum for the first time, an Administrator should have the option to decide on a variety of features that the forum should have. These options will determine the layout of the database for storing posts and users. We have identified the following options that should be available at creation based on popular forum features.
+\subsubsection{Configuration Classes (Configurable by Who and When)}\label{configclass}
+\paragraph{}
+We clarified earlier that users set options, however this broad statement is too vague to be left as is without further clarification. "Users set options", Provides us with proposition that has three free parameters which must be clarified before any given option is implemented. Firstly, Which "Users" can set this option? This restricts options certain options to certain users in the FUH. Secondly, What option is being implemented? These specifics of an options requirements will be ironed out in section \ref{configTypes}. Finally, the least intuitive of these parameters: At what point in time can this option be set? Not all options will be set during the lifetime of the forum, Some will only be able to be set at the creation of the forum and will not be able to be changed once it is created. 
+\paragraph{}
+The following classes have been created with parameters one and three in mind; to classify options based on level in the FUH and at what time these options can be set in the forum's life cycle.
+
+\begin{enumerate}
+    \item \textbf{Setup Administrator Configuration (SAC):} When setting up a forum for the first time, an administrator should have the option to decide on a variety of features that the forum should have. These options will determine the layout of the database for storing posts and users. These settings CAN NOT BE MODIFIED after the forum has been created, as these options will be used to determine how the database is structured, and modifying these after creation would cause incompatibility with earlier posts.   
+    \item \textbf{Live Administrator Option (LAO):} Some options should be modifiable after the forum is created, but only accessible by forum administrators. These options will typically deal with high level forum management and layout, such as the creation of new topics, changing logos, etc. 
+    \item \textbf{Live Moderator Option (LMO):} LMOs are the options available to moderators that deal with forum administration. This includes the ability to delete posts and threads, as well as ban and mute users. 
+    \item \textbf{Live User Option (LUO):}These options are available to all users with accounts at any time. Examples might include post options and thread creation options.  
+    \item \textbf{Live Individual Option (LIO):} Some options should only be available to a single individual user account, This includes setting user style and the ability to delete and edit your own posts.  
+    \item \textbf{Live Guest Option (LGO):} Sometimes guests will have access to options even without an account, these settings can be saved via cookies rather then on a users account. 
+\end{enumerate}
+
+\subsubsection{Configuration Types}\label{configTypes}
+\paragraph{}
+Each configuration on top of user and temporal restrictions also has a type associated with it. There are four primary configuration types: Boolean, Radio, Input.
+
+\begin{enumerate}
+    \item \textbf{Boolean:} A Boolean configuration is either on (enabled) or off (disabled), by default it will be disabled and when disabled will also set all sub configurations to their default (disabled) states.
+    \item \textbf{Radio:} A radio configuration will allow one of multiple choices to be selected (think radio buttons), these choices will be displayed as sub-options in the option hierarchy, each one having a markedly different effect. By default will have their first option selected.
+    \item \textbf{Input:} An input option will take a string of text or number entered by the user and use it for a setting, think HTML Input element. Inputs are empty by default.     
+\end{enumerate}
+\newpage
+\subsubsection{Configuration Hierarchy}\label{confighier}
+\paragraph{}
+Some configuration settings will depend on the value other configuration settings creating a hierarchy of options in the form of a tree. You will note that Inputs can only be leaves while Radios and Booleans are allowed to be part of the trunk. While we state "A Boolean option will be set to false if its parent is false" what we really mean is that if a Boolean option is set to false, its sub options are unable to be set and shouldn't be read from at all.
+\\\\
+\textbf{Sample Boolean Configuration Hierarchy:}\\
+(Where XYZ is the three letter configuration class abbreviation)
+\dirtree{%
+.1 XYZ Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
+The top level option, off by default\\
+\end{minipage}. 
+.2 XYZ Sub-Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
+    If Option is false, this should be off, unsettable, and never accessed\\
+\end{minipage}. 
+.3 XYZ Sub-Sub-Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
+    If Sub-Option is false, this should be off, unsettable, and never accessed\\
+\end{minipage}. 
+}
+
+\textbf{Sample Radio Configuration Hierarchy:}
+\dirtree{%
+.1 XYZ Option:Radio{o1,o2,o3}$\hspace{35pt}$\begin{minipage}[t]{5cm}
+    The top level option, o1 by default\\
+\end{minipage}. 
+.2 o1$\hspace{35pt}$\begin{minipage}[t]{5cm}
+    Option "o1", If selected will allow access to sub options\\
+\end{minipage}. 
+.3 XYZ boolSubOpt:Boolean $\hspace{35pt}$\begin{minipage}[t]{5cm}
+    Boolean sub-option available to be configured if Option is set to o1\\
+\end{minipage}. 
+.2 o2$\hspace{35pt}$\begin{minipage}[t]{5cm}
+    Option "o2", If selected will allow access to sub options\\
+\end{minipage}. 
+.3 XYZ inSubOpt:Input $\hspace{35pt}$\begin{minipage}[t]{5cm}
+    Input sub-option available to be configured if Option is set to o2\\
+\end{minipage}. 
+.2 o3$\hspace{35pt}$\begin{minipage}[t]{5cm}
+    Option "o3", Has no sub options and this is perfectly legal\\
+\end{minipage}. 
+}
+
+\subsection{Life Cycle (Mode) Requirements}
+\paragraph{}
+As you will recall from section \ref{configclass}, a core component of forum options is time at which an option is configurable. This clearly implies that a forum has a life cycle and that certain structure and features are different depending on when stage the forum is at.
+\paragraph{}
+In reality, the life cycle is quite simple and only consists of three distinct life stages or "Modes" that the forum application can be in: Setup, Live, Down.
+\paragraph{}
+\textbf{Setup:}
+When the server side of the forum starts up, it checks to see if it is starting for the first time. If it is, then the forum enters setup state. The setup state will prompt anyone who visits the forum to first create an account, which will be the first account made and set to admin by default, see account creation requirements \ref{accountCreation}. After the account is made, the user must login and will then be presented with a setup screen asking the user for all Setup Administrator Configurations (SACs). Once confirmed, these options will be used to set up the database structure and configure the layout to be used, the forum will enter the live state, unless an error is encountered, in which it will enter the down state.
+
+\textbf{Live:}
+This is the normal operational mode of the forum. When in this state users can preform all b
+
+\subsection{Structure Requirements}
+The site must be broken up according to the 4LH pattern discussed in section \ref{structOver}. Additionally the forum's life cycle modes dictate the additional small amount of structure needed for handling  
+
+
+
+\subsection{Accounts and Account Creation Requirements}\label{accountCreation}
 
 \subsubsection{Voting}
 The ability for users to upvote and downvote posts and threads. A Sub-option to downvotes should be present that will hide downvotes from users. 
