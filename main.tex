@@ -26,7 +26,7 @@
 
 \title{Modern Internet Forum Software \\ Project Proposal}
 \author{James Oswald, Kyle Plummer, Kyler Randall, \\ Ethan Seligman, Ed Tomlinson, Nicholas Tymeson, Paing Htet}
-\date{August 27, 2020}
+\date{}
 
 \begin{document}
 
@@ -175,7 +175,7 @@ A post is the smallest unit of discussion on a forum. A post is a message within
 \paragraph{}
 reddit is an example of a forum that lets you upload multiple pieces of media when making a post but only if your post is the start of a thread. 4chan on the other hand allows only images but will allow one image to  be attached per post. MAL will allow both unlimited images and links in the initial and reply posts.
 
-\subsection{User Structure}
+\subsection{User Structure}\label{usrStruct}
 Any entity that makes threads, posts, manages, or even looks at the forum is a "User". Forum users vary significantly by desired forum model. Users will have "ranks" or "roles" that grant them certain elevated privileges and forum management options, or users may be anonymous guests and not have any account associated with them at all. 
 
 \begin{minipage}{0.65\textwidth}
@@ -300,62 +300,76 @@ We clarified earlier that users set options, however this broad statement is too
 The following classes have been created with parameters one and three in mind; to classify options based on level in the FUH and at what time these options can be set in the forum's life cycle.
 
 \begin{enumerate}
-    \item \textbf{Setup Administrator Configuration (SAC):} When setting up a forum for the first time, an administrator should have the option to decide on a variety of features that the forum should have. These options will determine the layout of the database for storing posts and users. These settings CAN NOT BE MODIFIED after the forum has been created, as these options will be used to determine how the database is structured, and modifying these after creation would cause incompatibility with earlier posts.   
+    \item \textbf{Setup Administrator Configuration (SAC):} These options will be set by an admin during setup time, for clarification see section \ref{accAdmin}  
+    \item \textbf{Setup Guest Option (SGO):} An option available in setup mode to guests, only used for account creation options which need to be accessed for the creation of the initial admin account. 
     \item \textbf{Live Administrator Option (LAO):} Some options should be modifiable after the forum is created, but only accessible by forum administrators. These options will typically deal with high level forum management and layout, such as the creation of new topics, changing logos, etc. 
     \item \textbf{Live Moderator Option (LMO):} LMOs are the options available to moderators that deal with forum administration. This includes the ability to delete posts and threads, as well as ban and mute users. 
-    \item \textbf{Live User Option (LUO):}These options are available to all users with accounts at any time. Examples might include post options and thread creation options.  
+    \item \textbf{Live User Option (LUO):} These options are available to all users with accounts at any time. Examples include post options and thread creation options.  
     \item \textbf{Live Individual Option (LIO):} Some options should only be available to a single individual user account, This includes setting user style and the ability to delete and edit your own posts.  
-    \item \textbf{Live Guest Option (LGO):} Sometimes guests will have access to options even without an account, these settings can be saved via cookies rather then on a users account. 
+    \item \textbf{Guest Option (LGO):} Sometimes guests will have access to options even without an account. Where it applies, these settings can be saved via cookies rather then on a users account. 
 \end{enumerate}
-
-\subsubsection{Configuration Types}\label{configTypes}
+\subsubsection{Configuration and Option Types}\label{configTypes}
 \paragraph{}
-Each configuration on top of user and temporal restrictions also has a type associated with it. There are four primary configuration types: Boolean, Radio, Input.
+Each configuration, on top of user and temporal restrictions, also has a type associated with it. There are four primary configuration types: Boolean, Radio, Input, File.
 
 \begin{enumerate}
     \item \textbf{Boolean:} A Boolean configuration is either on (enabled) or off (disabled), by default it will be disabled and when disabled will also set all sub configurations to their default (disabled) states.
     \item \textbf{Radio:} A radio configuration will allow one of multiple choices to be selected (think radio buttons), these choices will be displayed as sub-options in the option hierarchy, each one having a markedly different effect. By default will have their first option selected.
-    \item \textbf{Input:} An input option will take a string of text or number entered by the user and use it for a setting, think HTML Input element. Inputs are empty by default.     
+    \item \textbf{Input:} An input option will take a string of text or number entered by the user and use it for a setting, think HTML Input element. Inputs are empty by default.
+    \item \textbf{File:} A File option will allow a file to be uploaded, this can be used for attachments to posts or uploading styles. 
 \end{enumerate}
-\newpage
-\subsubsection{Configuration Hierarchy}\label{confighier}
+
+\subsubsection{Configuration and Option Hierarchy}\label{confighier}
 \paragraph{}
-Some configuration settings will depend on the value other configuration settings creating a hierarchy of options in the form of a tree. You will note that Inputs can only be leaves while Radios and Booleans are allowed to be part of the trunk. While we state "A Boolean option will be set to false if its parent is false" what we really mean is that if a Boolean option is set to false, its sub options are unable to be set and shouldn't be read from at all.
+Some configuration settings and options will depend on the value other configuration settings creating a hierarchy of options in the form of a tree. You will note that Inputs can only be leaves while Radios and Booleans are allowed to be part of the trunk. While we state "A Boolean option will be set to false if its parent is false" what we really mean is that if a Boolean option is set to false, its sub options are unable to be set and shouldn't be read from at all.
 \\\\
 \textbf{Sample Boolean Configuration Hierarchy:}\\
-(Where XYZ is the three letter configuration class abbreviation)
+(Where XXX is the three letter configuration class abbreviation)
 \dirtree{%
-.1 XYZ Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
+.1 XXX Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
 The top level option, off by default\\
 \end{minipage}. 
-.2 XYZ Sub-Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
+.2 XXX Sub-Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
     If Option is false, this should be off, unsettable, and never accessed\\
 \end{minipage}. 
-.3 XYZ Sub-Sub-Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
+.3 XXX Sub-Sub-Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
     If Sub-Option is false, this should be off, unsettable, and never accessed\\
 \end{minipage}. 
 }
 
 \textbf{Sample Radio Configuration Hierarchy:}
 \dirtree{%
-.1 XYZ Option:Radio{o1,o2,o3}$\hspace{35pt}$\begin{minipage}[t]{5cm}
+.1 XXX Option:Radio{o1,o2,o3}$\hspace{35pt}$\begin{minipage}[t]{5cm}
     The top level option, o1 by default\\
 \end{minipage}. 
 .2 o1$\hspace{35pt}$\begin{minipage}[t]{5cm}
     Option "o1", If selected will allow access to sub options\\
 \end{minipage}. 
-.3 XYZ boolSubOpt:Boolean $\hspace{35pt}$\begin{minipage}[t]{5cm}
+.3 XXX boolSubOpt:Boolean $\hspace{35pt}$\begin{minipage}[t]{5cm}
     Boolean sub-option available to be configured if Option is set to o1\\
 \end{minipage}. 
 .2 o2$\hspace{35pt}$\begin{minipage}[t]{5cm}
     Option "o2", If selected will allow access to sub options\\
 \end{minipage}. 
-.3 XYZ inSubOpt:Input $\hspace{35pt}$\begin{minipage}[t]{5cm}
+.3 XXX inSubOpt:Input $\hspace{35pt}$\begin{minipage}[t]{5cm}
     Input sub-option available to be configured if Option is set to o2\\
 \end{minipage}. 
 .2 o3$\hspace{35pt}$\begin{minipage}[t]{5cm}
     Option "o3", Has no sub options and this is perfectly legal\\
 \end{minipage}. 
+}
+
+\subsubsection{Setup Live Symbiotism}\label{confighier}
+For brevity we have included the ability for setup options (those who's three letter acronym begins with S) to have live sub-options (those who's three letter acronym begins with L). When encountering a setup like this, you should interpret it to mean that the the setup option will appear on the setup page, but its sub-options will appear on the current page if their parent was enabled at setup. 
+
+\textbf{Sample Setup Option with Live Sub Option:}
+\dirtree{%
+.1 SXX setupOption:Bool$\hspace{35pt}$\begin{minipage}[t]{5cm}
+    Present on the setup page, NOT the current page\\
+\end{minipage}. 
+.2 LXX liveOption:X $\hspace{35pt}$\begin{minipage}[t]{5cm}
+    Present on current page if parent option was enabled on the startup page\\
+\end{minipage}.
 }
 
 \subsection{Life Cycle (Mode) Requirements}
@@ -364,25 +378,70 @@ As you will recall from section \ref{configclass}, a core component of forum opt
 \paragraph{}
 In reality, the life cycle is quite simple and only consists of three distinct life stages or "Modes" that the forum application can be in: Setup, Live, Down.
 \paragraph{}
-\textbf{Setup:}
+\textbf{Setup Mode:}
 When the server side of the forum starts up, it checks to see if it is starting for the first time. If it is, then the forum enters setup state. The setup state will prompt anyone who visits the forum to first create an account, which will be the first account made and set to admin by default, see account creation requirements \ref{accountCreation}. After the account is made, the user must login and will then be presented with a setup screen asking the user for all Setup Administrator Configurations (SACs). Once confirmed, these options will be used to set up the database structure and configure the layout to be used, the forum will enter the live state, unless an error is encountered, in which it will enter the down state.
-
-\textbf{Live:}
-This is the normal operational mode of the forum. When in this state users can preform all b
-
-\subsection{Structure Requirements}
-The site must be broken up according to the 4LH pattern discussed in section \ref{structOver}. Additionally the forum's life cycle modes dictate the additional small amount of structure needed for handling  
-
-
+\paragraph{}
+\textbf{Live Mode:}
+This is the normal operational mode of the forum. When in this state users can preform all normal functionality. The site should remain in this state unless down for maintenance, which will be discussed as an option later.   
+\paragraph{}
+\textbf{Down Mode:}
+This mode prevents users from logging in, and is triggered in the event of a server error or intentional maintenance. It will provide admins a way to diagnose errors if it was caused by a server error, or allow admins and moderators access to all live options and posts as if the site was up if caused intentionally for maintenance. Normal users and guests will be met with a down for maintenance message when visiting the forum, the only way around which is to log in with an admin account. Note that what options are available in this state are dependant on what caused the forum to go down.
 
 \subsection{Accounts and Account Creation Requirements}\label{accountCreation}
+Accounts must be setup according to the FUH discussed in section \ref{usrStruct}. This means you must implement four levels of abstract user: Admin, Moderator, User, and Guest. The way in which you implement the inheritance relationship between them is up to you but please ensure that the moderation hierarchy is compliant with the UML moderation ability diagram in section \ref{usrStruct}. 
+
+\subsubsection{Admin Account Creation Overview}\label{accAdmin}
+When setting up a forum for the first time, an administrator should have the option to decide on a variety of features that the forum should have in setup mode. The SACs will determine the layout of the database for storing posts and users. These SACs CAN NOT BE MODIFIED after the forum has been created, as these options will be used to determine how the database is structured, and modifying these after creation would cause incompatibility with earlier posts.
+
+\subsubsection{General Account Creation}
+For the account creation page requirements see \ref{AccPage}. This section deals with the background features that must take place when creating an account. Firstly, when creating an account, all accounts besides the first one created are User level by default. To create new admins or moderators, the original admin will need to manually upgrade their accounts, alternatively a moderator role may be auto assigned based on various options discussed later. When creating an account, the user will asked to provide a username, email, password, and confirmation password. You must run a check to make sure that the username isn't already taken, that the passwords match, and then preform email verification. To top it off, you must include a captcha to prevent automated creation of accounts from malicious actors.
+
+\subsection{Site Structure Requirements}
+\paragraph{}
+The site must be broken up according to the 4LH pattern discussed in section \ref{structOver}. Additionally the forum's life cycle modes dictate the additional small amount of structure needed for handling error cases and setup cases. The following are the bare minimum requirements for what pages must be implemented and their associated options. 
+
+\subsubsection{Account Creation}\label{AccPage}
+\paragraph{}
+This page must be available in Setup Mode and Live Mode. It allows for account creation using the following options as well as a captcha for security. Make sure to remember that the first account created on this page will always be given administrator status.
+\paragraph{}
+On top of the following options, this page must include a captcha a submit button to process the creation of the new account. In the event of an error, display the problem and allow the user to try again with new data, remember to keep as much of this processing client side as possible.
+\newpage
+\textbf{Account Creation Page Options:}
+\dirtree{%
+.1 .
+.2 LGO Username:Input$\hspace{35pt}$\begin{minipage}[t]{5cm}
+    The Username of the account to be created\\
+\end{minipage}. 
+.2 LGO Email:Input$\hspace{35pt}$\begin{minipage}[t]{5cm}
+    Email for email verification of the account\\
+\end{minipage}. 
+.2 LGO Password:Input$\hspace{35pt}$\begin{minipage}[t]{5cm}
+    New password for the account, should be implemented \\
+\end{minipage}. 
+.2 LGO confirmPassword:Input$\hspace{35pt}$\begin{minipage}[t]{5cm}
+    Password confirmation ensuring the user typed the desired password\\
+\end{minipage}. 
+}
+
+\subsubsection{Setup Page}
+
+\subsection{Down Page}
+
+\subsubsection{Home Page}
+
+\subsubsection{Home Page}
+
+\subsubsection{Home Page}
+
+
+
+\subsection{Multi Page Features}
+Some features are ubiquitous across multiple pages, such as the ability to vote on things which could be generalized to Topics, Boards, and Posts. In order to save
 
 \subsubsection{Voting}
 The ability for users to upvote and downvote posts and threads. A Sub-option to downvotes should be present that will hide downvotes from users. 
 A good example of forum with upvote and downvote functionality is \href{https://www.reddit.com/}{Reddit}, and a good example of a forum like environment with upvotes and invisible downvotes is the \href{https://www.youtube.com/}{Youtube} comments section. 
 
-\paragraph{A Note about sub option layout}
-If a boolean option is a sub-option of another boolean option, it will be set to false if its parent option is false. All boolean options are false by default, and all string options are initially empty. A radio option will be it's first sub-option by default, and you may only select another sub option of that radio.
 \\
 \dirtree{%
 .1 Setup Options. 
@@ -405,7 +464,6 @@ Back end handles data safely, site uses meets standards for safe authentication 
 
 
 
-\section{Implementation Recommendations}
 \newpage
 \section{Contents}\label{cont}
 \tableofcontents
