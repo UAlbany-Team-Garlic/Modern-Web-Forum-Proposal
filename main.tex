@@ -289,180 +289,155 @@ So that a forum can be more then just a proof of concept, every good forum needs
 \paragraph{}
 Your task is to create a highly customizable forum software with a modern stack that provides forum administrators and users a fine degree of control over the style and features. 
 
-\subsection{Configuration Options}
-\paragraph{}
-A forum isn't highly customizable unless it has options, and quite a few of them at that. These options will allow forum users to customize almost every aspect of the form from layout and style all the way to features and moderation. By integrating a diverse array of options, the functionality of the end product will grow exponentially with the number of people who find this software able to be customized to their needs. Sections \ref{configclass} - \ref{confighier} will elaborate on the complexities and structures of configurations which will be used extensively throughout the rest of the requirements. 
 
-\subsubsection{Configuration Classes (Configurable by Who and When)}\label{configclass}
+\subsection{User Features}
+\subsubsection{Forum User Hierarchy Features}
 \paragraph{}
-We clarified earlier that users set options, however this broad statement is too vague to be left as is without further clarification. "Users set options", Provides us with proposition that has three free parameters which must be clarified before any given option is implemented. Firstly, Which "Users" can set this option? This restricts options certain options to certain users in the FUH. Secondly, What option is being implemented? These specifics of an options requirements will be ironed out in section \ref{configTypes}. Finally, the least intuitive of these parameters: At what point in time can this option be set? Not all options will be set during the lifetime of the forum, Some will only be able to be set at the creation of the forum and will not be able to be changed once it is created. 
-\paragraph{}
-The following classes have been created with parameters one and three in mind; to classify options based on level in the FUH and at what time these options can be set in the forum's life cycle.
-
+Your forum should follow the FUH provided in section \ref{usrStruct} and have moderation follow the moderation ability diagram from the UML in the same section. the have four user levels with configurable permissions.
 \begin{enumerate}
-    \item \textbf{Setup Administrator Configuration (SAC):} These options will be set by an admin during setup time, for clarification see section \ref{accAdmin}  
-    \item \textbf{Setup Guest Option (SGO):} An option available in setup mode to guests, only used for account creation options which need to be accessed for the creation of the initial admin account. 
-    \item \textbf{Live Administrator Option (LAO):} Some options should be modifiable after the forum is created, but only accessible by forum administrators. These options will typically deal with high level forum management and layout, such as the creation of new topics, changing logos, etc. 
-    \item \textbf{Live Moderator Option (LMO):} LMOs are the options available to moderators that deal with forum administration. This includes the ability to delete posts and threads, as well as ban and mute users. 
-    \item \textbf{Live User Option (LUO):} These options are available to all users with accounts at any time. Examples include post options and thread creation options.  
-    \item \textbf{Live Individual Option (LIO):} Some options should only be available to a single individual user account, This includes setting user style and the ability to delete and edit your own posts.  
-    \item \textbf{Guest Option (LGO):} Sometimes guests will have access to options even without an account. Where it applies, these settings can be saved via cookies rather then on a users account. 
-\end{enumerate}
-\subsubsection{Configuration and Option Types}\label{configTypes}
-\paragraph{}
-Each configuration, on top of user and temporal restrictions, also has a type associated with it. There are four primary configuration types: Boolean, Radio, Input, File.
-
-\begin{enumerate}
-    \item \textbf{Boolean:} A Boolean configuration is either on (enabled) or off (disabled), by default it will be disabled and when disabled will also set all sub configurations to their default (disabled) states.
-    \item \textbf{Radio:} A radio configuration will allow one of multiple choices to be selected (think radio buttons), these choices will be displayed as sub-options in the option hierarchy, each one having a markedly different effect. By default will have their first option selected.
-    \item \textbf{Input:} An input option will take a string of text or number entered by the user and use it for a setting, think HTML Input element. Inputs are empty by default.
-    \item \textbf{File:} A File option will allow a file to be uploaded, this can be used for attachments to posts or uploading styles. 
+    \item \textbf{Administrator (admin):} Top level accounts with full moderation, setting, and promotion access.
+    \item \textbf{Moderator (mod):} Accounts with access to topic specific moderation. (Also referred to as topic moderators)
+    \item \textbf{User:} Account with basic permissions to post.
+    \item \textbf{Guest:} Users without an account who may or may not be able to post based on settings. 
 \end{enumerate}
 
-\subsubsection{Configuration and Option Hierarchy}\label{confighier}
-\paragraph{}
-Some configuration settings and options will depend on the value other configuration settings creating a hierarchy of options in the form of a tree. You will note that Inputs can only be leaves while Radios and Booleans are allowed to be part of the trunk. While we state "A Boolean option will be set to false if its parent is false" what we really mean is that if a Boolean option is set to false, its sub options are unable to be set and shouldn't be read from at all.
-\\\\
-\textbf{Sample Boolean Configuration Hierarchy:}\\
-(Where XXX is the three letter configuration class abbreviation)
-\dirtree{%
-.1 XXX Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
-The top level option, off by default\\
-\end{minipage}. 
-.2 XXX Sub-Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    If Option is false, this should be off, unsettable, and never accessed\\
-\end{minipage}. 
-.3 XXX Sub-Sub-Option:Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    If Sub-Option is false, this should be off, unsettable, and never accessed\\
-\end{minipage}. 
-}
+\subsubsection{User Creation Features}\label{UCF}
+\begin{itemize}
+    \item check for taken Username
+    \item Email verification on account setup
+    \item Password strength check
+    \item Retype password check 
+\end{itemize}
 
-\textbf{Sample Radio Configuration Hierarchy:}
-\dirtree{%
-.1 XXX Option:Radio{o1,o2,o3}$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    The top level option, o1 by default\\
-\end{minipage}. 
-.2 o1$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    Option "o1", If selected will allow access to sub options\\
-\end{minipage}. 
-.3 XXX boolSubOpt:Boolean $\hspace{35pt}$\begin{minipage}[t]{5cm}
-    Boolean sub-option available to be configured if Option is set to o1\\
-\end{minipage}. 
-.2 o2$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    Option "o2", If selected will allow access to sub options\\
-\end{minipage}. 
-.3 XXX inSubOpt:Input $\hspace{35pt}$\begin{minipage}[t]{5cm}
-    Input sub-option available to be configured if Option is set to o2\\
-\end{minipage}. 
-.2 o3$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    Option "o3", Has no sub options and this is perfectly legal\\
-\end{minipage}. 
-}
+\subsubsection{User Customization Features}
+These features hinge on weather or not they are enabled at setup, see \ref{setup}:\ref{custom}
+\begin{itemize}
+    \item \textbf{Profile Picture:} to display on threads, posts, and profile.
+    \item \textbf{Nickname:} to replace their username as their display name after it has been set
+    \item \textbf{Biography:} to be displayed on their profiles.
+\end{itemize}
 
-\subsubsection{Setup Live Symbiotism}\label{confighier}
-For brevity we have included the ability for setup options (those who's three letter acronym begins with S) to have live sub-options (those who's three letter acronym begins with L). When encountering a setup like this, you should interpret it to mean that the the setup option will appear on the setup page, but its sub-options will appear on the current page if their parent was enabled at setup. 
+\subsubsection{Moderation and Promotion Features}
+\begin{itemize}
+    \item Ability for admins and topic mods to ban or mute a user from a topic.
+    \item Ability for admins to ban or mute a user from the whole forum.
+    \item Ability for admins to create moderators and other admins.
+\end{itemize}
 
-\textbf{Sample Setup Option with Live Sub Option:}
-\dirtree{%
-.1 SXX setupOption:Bool$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    Present on the setup page, NOT the current page\\
-\end{minipage}. 
-.2 LXX liveOption:X $\hspace{35pt}$\begin{minipage}[t]{5cm}
-    Present on current page if parent option was enabled on the startup page\\
-\end{minipage}.
-}
+\subsection{Modes}
+Your forum should have three modes that allow different states of operation. 
+\begin{enumerate}
+    \item \textbf{Setup:} One time setting of critical options that determine forum database layout.
+    \item \textbf{Live:} Normal operation mode. 
+    \item \textbf{Down:} Lets admins change setting and doesn't let normal users on until switched off.
+\end{enumerate}
 
-\subsection{Life Cycle (Mode) Requirements}
-\paragraph{}
-As you will recall from section \ref{configclass}, a core component of forum options is time at which an option is configurable. This clearly implies that a forum has a life cycle and that certain structure and features are different depending on when stage the forum is at.
-\paragraph{}
-In reality, the life cycle is quite simple and only consists of three distinct life stages or "Modes" that the forum application can be in: Setup, Live, Down.
-\paragraph{}
-\textbf{Setup Mode:}
-When the server side of the forum starts up, it checks to see if it is starting for the first time. If it is, then the forum enters setup state. The setup state will prompt anyone who visits the forum to first create an account, which will be the first account made and set to admin by default, see account creation requirements \ref{accountCreation}. After the account is made, the user must login and will then be presented with a setup screen asking the user for all Setup Administrator Configurations (SACs). Once confirmed, these options will be used to set up the database structure and configure the layout to be used, the forum will enter the live state, unless an error is encountered, in which it will enter the down state.
-\paragraph{}
-\textbf{Live Mode:}
-This is the normal operational mode of the forum. When in this state users can preform all normal functionality. The site should remain in this state unless down for maintenance, which will be discussed as an option later.   
-\paragraph{}
-\textbf{Down Mode:}
-This mode prevents users from logging in, and is triggered in the event of a server error or intentional maintenance. It will provide admins a way to diagnose errors if it was caused by a server error, or allow admins and moderators access to all live options and posts as if the site was up if caused intentionally for maintenance. Normal users and guests will be met with a down for maintenance message when visiting the forum, the only way around which is to log in with an admin account. Note that what options are available in this state are dependant on what caused the forum to go down.
+\subsection{Page Features}
+Your forum site should follow the general layout of the 4LH model discussed in section \ref{structOver}. This means you should first be sure to implement the following pages.
+\subsubsection{List of Pages to be Implemented}\label{Pages to implement}
+\begin{enumerate}
+    \item \textbf{Home Page:} List of boards / topics & options to create new boards.
+    \item \textbf{Topic Pages:} Lists of threads on a topic & options to create new threads.
+    \item \textbf{Thread Pages:} Lists of posts in a given thread
+\end{enumerate}
+On top of these provided by the 4LH model, you should also implement these standard auxiliary pages:
+\begin{enumerate}
+    \item \textbf{Setup Page:} Page for initial setup of the site in setup mode.
+    \item \textbf{Down Page:} Page to display message notifying users the site is down.
+    \item \textbf{Account Creation Page:} Page to create new user accounts.
+    \item \textbf{Login Page:} Page to log into your account.
+    \item \textbf{Profile Pages:} Pages for users with accounts to display information on themselves.
+    \item \textbf{User settings Pages:} Pages for users with accounts can change their settings.
+    \item \textbf{Rules Pages:} For the rules of the forum or sub-rules for certain topics. 
+    \item \textbf{404 Page:} For 404 (Page not found) errors. 
+    \item \textbf{500 Page:} For 500 (Internal Server) errors.
+\end{enumerate}
 
-\subsection{Accounts and Account Creation Requirements}\label{accountCreation}
-Accounts must be setup according to the FUH discussed in section \ref{usrStruct}. This means you must implement four levels of abstract user: Admin, Moderator, User, and Guest. The way in which you implement the inheritance relationship between them is up to you but please ensure that the moderation hierarchy is compliant with the UML moderation ability diagram in section \ref{usrStruct}. 
+\subsubsection{Universal Page Features}\label{uni}
+The following features should be present on every single page.
+\begin{itemize}
+    \item The forum's header, with links to key parts of the forum, the name, and the logo.
+    \item A user button with user navigation links to their profile and settings.
+    \item A modular HTML Class and ID system that can easily be customized using user uploaded CSS style sheets.
+\end{itemize}
 
-\subsubsection{Admin Account Creation Overview}\label{accAdmin}
-When setting up a forum for the first time, an administrator should have the option to decide on a variety of features that the forum should have in setup mode. The SACs will determine the layout of the database for storing posts and users. These SACs CAN NOT BE MODIFIED after the forum has been created, as these options will be used to determine how the database is structured, and modifying these after creation would cause incompatibility with earlier posts.
+\subsubsection{Setup Page Features}\label{setup}
+The setup page should include the following features:
+\begin{enumerate}
+    \item \label{anon} A config option allowing or disallowing guests to post Under Nicknames or Anonymously.
+    \item \label{votes} Three config options allowing or disallowing voting on Topics, Threads, and Posts.
+    \item \label{modgod} A config option allowing or disallowing users to have the ability create and moderate their own topics (Boards / Communities).
+    \item A config option specifying how long or how many inactive threads to store, or weather or not to delete them at all. 
+    \item \label{custom} Three config options allowing or disallowing users to have profile pictures, signatures, and nicknames.
+    \item \label{pfp} A config options allowing or disallowing profile pages.
+    \item \label{attachments} Configuration options on what type of files are allowed to be attached to posts.
+\end{enumerate}
 
-\subsubsection{General Account Creation}
-For the account creation page requirements see \ref{AccPage}. This section deals with the background features that must take place when creating an account. Firstly, when creating an account, all accounts besides the first one created are User level by default. To create new admins or moderators, the original admin will need to manually upgrade their accounts, alternatively a moderator role may be auto assigned based on various options discussed later. When creating an account, the user will asked to provide a username, email, password, and confirmation password. You must run a check to make sure that the username isn't already taken, that the passwords match, and then preform email verification. To top it off, you must include a captcha to prevent automated creation of accounts from malicious actors.
+\subsubsection{Home Page Features}
+The home page should have the following features:
+\begin{itemize}
+    \item Ability for admins (potentially moderators, see \ref{setup}:\ref{modgod}) to create and delete topics
+    \item A sort-able and search-able list of all topics based on activity, posts, popularity, time, or potentially votes (see \ref{setup}:\ref{votes}) 
+    \item Featured threads pulled from all topics based on activity, posts, popularity, time, or potentially votes (see \ref{setup}:\ref{votes}) 
+\end{itemize}
 
-\subsection{Site Structure Requirements}
-\paragraph{}
-The site must be broken up according to the 4LH pattern discussed in section \ref{structOver}. Additionally the forum's life cycle modes dictate the additional small amount of structure needed for handling error cases and setup cases. The following are the bare minimum requirements for what pages must be implemented and their associated options. 
+\subsubsection{Topic Pages Features}
+\begin{itemize}
+    \item Ability for users (potentially guests, see \ref{setup}:\ref{anon}) to create new threads or delete threads that they've made.
+    \item A sort-able and search-able list of all threads based on activity, posts, popularity, time, or potentially votes (see \ref{setup}:\ref{votes}) 
+    \item Ability for admins and mods to delete threads from the topic page.
+\end{itemize}
 
-\subsubsection{Account Creation}\label{AccPage}
-\paragraph{}
-This page must be available in Setup Mode and Live Mode. It allows for account creation using the following options as well as a captcha for security. Make sure to remember that the first account created on this page will always be given administrator status.
-\paragraph{}
-On top of the following options, this page must include a captcha a submit button to process the creation of the new account. In the event of an error, display the problem and allow the user to try again with new data, remember to keep as much of this processing client side as possible.
-\newpage
-\textbf{Account Creation Page Options:}
-\dirtree{%
-.1 .
-.2 LGO Username:Input$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    The Username of the account to be created\\
-\end{minipage}. 
-.2 LGO Email:Input$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    Email for email verification of the account\\
-\end{minipage}. 
-.2 LGO Password:Input$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    New password for the account, should be implemented \\
-\end{minipage}. 
-.2 LGO confirmPassword:Input$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    Password confirmation ensuring the user typed the desired password\\
-\end{minipage}. 
-}
+\subsubsection{Thread Pages Features}\label{threadF}
+\begin{itemize}
+    \item Ability for users (potentially guests, see \ref{setup}:\ref{anon}) to create new posts or edit and delete posts that they've made.
+    \item Ability for admins and mods to delete posts.
+    \item A sort-able and search-able list of all posts in the thread based on activity, posts, popularity, time, or potentially votes (see \ref{setup}:\ref{votes}) 
+    \item Ability to sort posts by reply, using either a reply citation system like 4chan or a quote reply system like MAL, you do not need to implement a reply chain system like reddit.
+\end{itemize}
 
-\subsubsection{Setup Page}
+\subsubsection{Post Features}
+While not explicitly a page unto themselves, these features fit best here. 
+\begin{itemize}
+    \item Ability to send text data.
+    \item Ability to be edited or deleted by the user who posted it.
+    \item Ability to be deleted by admins or topic mods.
+    \item Ability to attach certain media types such as images if the config from \ref{setup}:\ref{attachments} is set true.
+    \item Ability for admins or topic mods to remove attachments without deleting the post. 
+    \item Ability to reply to other posts using a quotation system or reply citation system as mentioned in \ref{threadF}
+\end{itemize}
 
-\subsection{Down Page}
+\subsubsection{Account Creation Page Features}
+\begin{itemize}
+    \item All of the features mentioned and inferred from in \ref{UCF}.
+    \item A captcha to prevent botting account creation.
+\end{itemize}
 
-\subsubsection{Home Page}
+\subsubsection{Login Page Features}
+\begin{itemize}
+    \item A place to enter your username and password.
+    \item A captcha to prevent botting account logins.
+\end{itemize}
 
-\subsubsection{Home Page}
-
-\subsubsection{Home Page}
-
-
-
-\subsection{Multi Page Features}
-Some features are ubiquitous across multiple pages, such as the ability to vote on things which could be generalized to Topics, Boards, and Posts. In order to save
-
-\subsubsection{Voting}
-The ability for users to upvote and downvote posts and threads. A Sub-option to downvotes should be present that will hide downvotes from users. 
-A good example of forum with upvote and downvote functionality is \href{https://www.reddit.com/}{Reddit}, and a good example of a forum like environment with upvotes and invisible downvotes is the \href{https://www.youtube.com/}{Youtube} comments section. 
-
-\\
-\dirtree{%
-.1 Setup Options. 
-.2 Voting : Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    The voting option enables the ability for users to upvote and downvote posts and threads\\
-\end{minipage}. 
-.3 Downvotes Enabled: Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    Disables the ability for posts to be downvoted\\
-\end{minipage}. 
-.4 Invisible Downvotes: Boolean$\hspace{35pt}$\begin{minipage}[t]{5cm}
-    \\
-\end{minipage}. 
-}
-
-\subsubsection{User Mode Options}
-Account Driven, anonymous 
-
-\subsection{Security Features}
-Back end handles data safely, site uses meets standards for safe authentication and protects user's data. Database is kept as safe as passable from injection attacks and leaks. 
+\subsubsection{User settings Pages Features}
+\begin{itemize}
+    \item Ability to change any enabled user settings, profile pic, nickname, bio, password, etc. Note that Username is not changeable!
+    \item Ability to upload a custom CSS style-sheet to restyle the modular layout forum specified in section \ref{uni}.
+\end{itemize}
 
 
+\subsubsection{Profile Pages Features}
+The existance of these hinges on \ref{setup}:\ref{pfp} being enabled.
+\begin{itemize}
+    \item Whichever of the items are enabled from \ref{setup}:\ref{custom}.
+    \item Number of posts.
+    \item Registration date.
+\end{itemize}
+
+\subsubsection{Article 10}
+Any pages listed in \ref{Pages to implement} but not listed in any of the other subsections 3.5 subsections are to be implemented at your discretion, but still must follow the Universal Page Features from section \ref{uni}.
+
+\section{Security}
 
 \newpage
 \section{Contents}\label{cont}
