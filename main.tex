@@ -427,7 +427,7 @@ While not explicitly a page unto themselves, these features fit best here.
 
 
 \subsubsection{Profile Pages Features}
-The existance of these hinges on \ref{setup}:\ref{pfp} being enabled.
+The existence of these hinges on \ref{setup}:\ref{pfp} being enabled.
 \begin{itemize}
     \item Whichever of the items are enabled from \ref{setup}:\ref{custom}.
     \item Number of posts.
@@ -437,11 +437,50 @@ The existance of these hinges on \ref{setup}:\ref{pfp} being enabled.
 \subsubsection{Article 10}
 Any pages listed in \ref{Pages to implement} but not listed in any of the other subsections 3.5 subsections are to be implemented at your discretion, but still must follow the Universal Page Features from section \ref{uni}.
 
-\section{Security}
+\newpage
+\subsection{Security}
+The forum must implement some standard security features so that its actually usable as more then just a proof of concept. 
+\subsubsection{Data Storage Requirements}\label{dsr}
+You must ensure a high level of data security as you will be storing account information.
+\begin{itemize}
+    \item No plain text stored in the database for anything. Especially user credentials. 
+    \item Use a modern hashing method to ensure all encrypted data is cryptographically secure from being decoded if the data is stolen. 
+\end{itemize}
+
+\subsubsection{Spam Prevention Requirements} \label{spamprev}
+Users should not be able to spam create threads or posts or anything that could potentially increase server load using a single account or guest IP.
+\begin{itemize}
+    \item A reasonable post and thread cool down time between post and thread creations for a single user.
+    \item Auto-ban / auto-mute anyone clearly advertising or spamming the same message. For guest users this should be implemented as an IP ban.
+    \item A reasonable attachment max size and attachment garbage collection to prevent intentionally running down disk space.
+    \item Countermeasures for users spamming setting changes and trying to run down resources that way. 
+\end{itemize}
+
+\subsubsection{Bot Prevention Requirements}
+You must protect against bots not only with the spam prevention requirements laid out in \ref{spamprev} but also brute forcing logons or account creation.
+\begin{itemize}
+    \item captacha on account creation, login, or when making multiple posts in a row. 
+\end{itemize}
+
+\subsubsection{Injection Prevention Requirements}
+Users must not be allowed to inject code to run client or server side.
+\begin{itemize}
+    \item User input sanitation for ANYTHING sent to the server by users.
+    \item Prevention of <script>s being put in posts or anything else the user inputs.
+    \item Prevention of database query injection attacks that could leak user credentials. Even if this occurs, you should be double protected via the strict data storage requirements in section \ref{dsr}
+\end{itemize}
+
 
 \newpage
 \section{Contents}\label{cont}
 \tableofcontents
+\vspace{8cm}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.3]{Garlic.jpg}
+    \caption{This project was brought to you by \href{https://github.com/UAlbany-Team-Garlic}{UAlbany Team Garlic}}
+\end{figure}
+
 
 \end{document}
 
